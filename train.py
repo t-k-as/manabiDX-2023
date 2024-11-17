@@ -145,6 +145,7 @@ def main():
                                             lr=LEARNING_RATE, bs=BATCH_SIZE, save_model_name=MODEL_NAME,
                                             multi_class=MULTI_CLASS, scheduler=scheduler, fold=fold, writer=writer)
             #テストデータの予測結果
+            # CVの各データセットのtrain後、そのまま予測を行う
             pred_fold = []
             pred_fun = torch.nn.Softmax(dim=1)
             for i,(inputs, labels) in enumerate(subdataloader):
@@ -219,8 +220,9 @@ def main():
     #######################
     if SUBMIT:
 
+        # CVの場合は、CV中に集計したテストデータの予測結果(pred)を使用
         if not CV:
-            #テストデータの読み込み
+            # テストデータの読み込み
             subdataset = For_Submission_Datasets(data_transform=data_transforms['val'])
             subdataloader = torch.utils.data.DataLoader(subdataset, batch_size=1, shuffle=False, num_workers=NUM_WORKERS, drop_last=True)
 
